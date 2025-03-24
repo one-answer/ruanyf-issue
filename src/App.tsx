@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import axios from 'axios'
 import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
@@ -124,14 +124,14 @@ function App() {
       // Process categories from all issues
       const categoryMap: CategoryMap = { 
         '全部': updatedIssues.length,
-        '开源自荐': updatedIssues.filter(issue => issue.is_open_source_recommendation).length,
-        '工具自荐': updatedIssues.filter(issue => issue.is_tool_recommendation).length,
-        '网站自荐': updatedIssues.filter(issue => issue.is_website_recommendation).length,
-        '文章自荐': updatedIssues.filter(issue => issue.is_article_recommendation).length
+        '开源自荐': updatedIssues.filter((issue: Issue) => issue.is_open_source_recommendation).length,
+        '工具自荐': updatedIssues.filter((issue: Issue) => issue.is_tool_recommendation).length,
+        '网站自荐': updatedIssues.filter((issue: Issue) => issue.is_website_recommendation).length,
+        '文章自荐': updatedIssues.filter((issue: Issue) => issue.is_article_recommendation).length
       };
       
       updatedIssues.forEach((issue: Issue) => {
-        issue.labels.forEach(label => {
+        issue.labels.forEach((label: {name: string}) => {
           if (!categoryMap[label.name]) {
             categoryMap[label.name] = 0;
           }
@@ -206,15 +206,15 @@ function App() {
     activeCategory === '全部'
       ? issues
       : activeCategory === '开源自荐'
-        ? issues.filter(issue => issue.is_open_source_recommendation)
+        ? issues.filter((issue: Issue) => issue.is_open_source_recommendation)
         : activeCategory === '工具自荐'
-          ? issues.filter(issue => issue.is_tool_recommendation)
+          ? issues.filter((issue: Issue) => issue.is_tool_recommendation)
           : activeCategory === '网站自荐'
-            ? issues.filter(issue => issue.is_website_recommendation)
+            ? issues.filter((issue: Issue) => issue.is_website_recommendation)
             : activeCategory === '文章自荐'
-              ? issues.filter(issue => issue.is_article_recommendation)
-              : issues.filter(issue => 
-                  issue.labels.some(label => label.name === activeCategory)
+              ? issues.filter((issue: Issue) => issue.is_article_recommendation)
+              : issues.filter((issue: Issue) => 
+                  issue.labels.some((label: {name: string}) => label.name === activeCategory)
                 );
   
   // Sort the filtered issues
