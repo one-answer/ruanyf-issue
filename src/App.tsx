@@ -32,6 +32,12 @@ function App() {
     return title.includes('网站自荐');
   };
 
+  // Function to detect if an issue is an article recommendation
+  const isArticleRecommendation = (title: string): boolean => {
+    // Match titles that contain either "文章自荐" or "文章推荐"
+    return title.includes('文章自荐') || title.includes('文章推荐');
+  };
+
   // Define sorting functions
   const sortByLatest = (a: Issue, b: Issue): number => {
     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -66,6 +72,7 @@ function App() {
           const isOpenSource = isOpenSourceRecommendation(issue.title);
           const isTool = isToolRecommendation(issue.title);
           const isWebsite = isWebsiteRecommendation(issue.title);
+          const isArticle = isArticleRecommendation(issue.title);
           
           return {
             id: issue.id,
@@ -89,6 +96,7 @@ function App() {
             is_open_source_recommendation: isOpenSource,
             is_tool_recommendation: isTool,
             is_website_recommendation: isWebsite,
+            is_article_recommendation: isArticle,
           };
         });
 
@@ -97,7 +105,8 @@ function App() {
           '全部': fetchedIssues.length,
           '开源自荐': fetchedIssues.filter(issue => issue.is_open_source_recommendation).length,
           '工具自荐': fetchedIssues.filter(issue => issue.is_tool_recommendation).length,
-          '网站自荐': fetchedIssues.filter(issue => issue.is_website_recommendation).length
+          '网站自荐': fetchedIssues.filter(issue => issue.is_website_recommendation).length,
+          '文章自荐': fetchedIssues.filter(issue => issue.is_article_recommendation).length
         }
         
         fetchedIssues.forEach((issue: Issue) => {
@@ -132,9 +141,11 @@ function App() {
           ? issues.filter(issue => issue.is_tool_recommendation)
           : activeCategory === '网站自荐'
             ? issues.filter(issue => issue.is_website_recommendation)
-            : issues.filter(issue => 
-                issue.labels.some(label => label.name === activeCategory)
-              )
+            : activeCategory === '文章自荐'
+              ? issues.filter(issue => issue.is_article_recommendation)
+              : issues.filter(issue => 
+                  issue.labels.some(label => label.name === activeCategory)
+                )
   
   // Sort the filtered issues
   const sortedIssues = [...categoryFilteredIssues].sort((a, b) => {

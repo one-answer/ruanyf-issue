@@ -28,6 +28,9 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
       // Keep '网站自荐' right after '工具自荐'
       if (a[0] === '网站自荐') return -1;
       if (b[0] === '网站自荐') return 1;
+      // Keep '文章自荐' right after '网站自荐'
+      if (a[0] === '文章自荐') return -1;
+      if (b[0] === '文章自荐') return 1;
       return b[1] - a[1];
     });
 
@@ -46,10 +49,12 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
                 'bg-blue-100 text-blue-800 hover:bg-blue-200': category === '开源自荐' && activeCategory !== category,
                 'bg-green-100 text-green-800 hover:bg-green-200': category === '工具自荐' && activeCategory !== category,
                 'bg-purple-100 text-purple-800 hover:bg-purple-200': category === '网站自荐' && activeCategory !== category,
+                'bg-amber-100 text-amber-800 hover:bg-amber-200': category === '文章自荐' && activeCategory !== category,
                 'bg-gray-200 text-gray-800 hover:bg-gray-300': activeCategory !== category && 
                   category !== '开源自荐' && 
                   category !== '工具自荐' && 
-                  category !== '网站自荐',
+                  category !== '网站自荐' &&
+                  category !== '文章自荐',
               }
             )}
           >

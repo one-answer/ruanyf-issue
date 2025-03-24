@@ -24,6 +24,7 @@ export interface Issue {
   is_open_source_recommendation: boolean;
   is_tool_recommendation: boolean;
   is_website_recommendation: boolean;
+  is_article_recommendation: boolean;
 }
 
 export interface CategoryMap {

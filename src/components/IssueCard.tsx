@@ -48,6 +48,16 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
     return '工具自荐'; // Default fallback
   };
 
+  // Determine the appropriate article badge text
+  const getArticleBadgeText = () => {
+    if (issue.title.includes('文章自荐')) {
+      return '文章自荐';
+    } else if (issue.title.includes('文章推荐')) {
+      return '文章推荐';
+    }
+    return '文章自荐'; // Default fallback
+  };
+
   return (
     <div className={classNames(
       "bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
@@ -55,7 +65,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
         "border-blue-300 bg-blue-50": issue.is_open_source_recommendation,
         "border-green-300 bg-green-50": issue.is_tool_recommendation && !issue.is_open_source_recommendation,
         "border-purple-300 bg-purple-50": issue.is_website_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation,
-        "border-gray-200": !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation
+        "border-amber-300 bg-amber-50": issue.is_article_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation,
+        "border-gray-200": !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation && !issue.is_article_recommendation
       }
     )}>
       <div className="p-4">
@@ -107,6 +118,13 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
               className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200"
             >
               网站自荐
+            </span>
+          )}
+          {issue.is_article_recommendation && (
+            <span
+              className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200"
+            >
+              {getArticleBadgeText()}
             </span>
           )}
           {issue.labels.length > 0 && 
