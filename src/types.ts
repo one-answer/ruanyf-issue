@@ -22,6 +22,7 @@ export interface Issue {
   user: User;
   comments: number;
   is_open_source_recommendation: boolean;
+  is_tool_recommendation: boolean;
 }
 
 export interface CategoryMap {

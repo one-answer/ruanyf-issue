@@ -43,7 +43,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       "bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
       {
         "border-blue-300 bg-blue-50": issue.is_open_source_recommendation,
-        "border-gray-200": !issue.is_open_source_recommendation
+        "border-green-300 bg-green-50": issue.is_tool_recommendation && !issue.is_open_source_recommendation,
+        "border-gray-200": !issue.is_open_source_recommendation && !issue.is_tool_recommendation
       }
     )}>
       <div className="p-4">
@@ -81,6 +82,13 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
               className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
             >
               开源自荐
+            </span>
+          )}
+          {issue.is_tool_recommendation && (
+            <span
+              className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"
+            >
+              工具自荐
             </span>
           )}
           {issue.labels.length > 0 && 
