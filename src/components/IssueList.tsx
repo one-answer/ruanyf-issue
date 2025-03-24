@@ -9,15 +9,15 @@ interface IssueListProps {
 const IssueList: React.FC<IssueListProps> = ({ issues }) => {
   if (issues.length === 0) {
     return (
-      <div className="bg-gray-100 p-6 rounded-lg text-center">
-        <p className="text-gray-600">没有找到符合条件的 Issue</p>
+      <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg text-center">
+        <p className="text-gray-600 dark:text-gray-400">没有找到符合条件的 Issue</p>
       </div>
     );
   }
 
   return (
     <div>
-      <div className="mb-4 text-sm text-gray-600">
+      <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
         共找到 <span className="font-semibold">{issues.length}</span> 个符合条件的 Issue
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

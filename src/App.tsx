@@ -4,6 +4,7 @@ import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
 import CategoryTabs from './components/CategoryTabs'
 import SortSelector from './components/SortSelector'
+import ThemeToggle from './components/ThemeToggle'
 import './App.css'
 
 function App() {
@@ -157,11 +158,16 @@ function App() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <header className="bg-white dark:bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-gray-800">科技爱好者周刊 - 列表</h1>
-          <p className="text-gray-500">查看 Ruanyf 的周刊 GitHub 仓库中的开源推荐</p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white">科技爱好者周刊 - 列表</h1>
+              <p className="text-gray-500 dark:text-gray-400">查看 Ruanyf 的周刊 GitHub 仓库中的推荐</p>
+            </div>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
       
@@ -184,10 +190,10 @@ function App() {
           
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="loader"></div>
+              <div className="loader dark:border-gray-700 dark:border-t-blue-500"></div>
             </div>
           ) : error ? (
-            <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4">
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-400 rounded-md p-4">
               {error}
             </div>
           ) : (
@@ -196,10 +202,10 @@ function App() {
         </div>
       </main>
       
-      <footer className="bg-white shadow-inner mt-8">
+      <footer className="bg-white dark:bg-gray-800 shadow-inner mt-8">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 text-sm">
-            数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">ruanyf/weekly</a> 仓库
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
+            数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">ruanyf/weekly</a> 仓库
           </p>
         </div>
       </footer>

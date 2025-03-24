@@ -36,7 +36,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
 
   return (
     <div className="w-full md:w-auto">
-      <h2 className="text-lg font-semibold mb-2 text-gray-700">分类筛选</h2>
+      <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">分类筛选</h2>
       <div className="flex flex-wrap gap-2">
         {sortedCategories.map(([category, count]) => (
           <button
@@ -46,11 +46,11 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               'px-3 py-1 rounded-full text-sm font-medium transition-colors',
               {
                 'bg-blue-600 text-white': activeCategory === category,
-                'bg-blue-100 text-blue-800 hover:bg-blue-200': category === '开源自荐' && activeCategory !== category,
-                'bg-green-100 text-green-800 hover:bg-green-200': category === '工具自荐' && activeCategory !== category,
-                'bg-purple-100 text-purple-800 hover:bg-purple-200': category === '网站自荐' && activeCategory !== category,
-                'bg-amber-100 text-amber-800 hover:bg-amber-200': category === '文章自荐' && activeCategory !== category,
-                'bg-gray-200 text-gray-800 hover:bg-gray-300': activeCategory !== category && 
+                'bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70': category === '开源自荐' && activeCategory !== category,
+                'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/50 dark:text-green-300 dark:hover:bg-green-900/70': category === '工具自荐' && activeCategory !== category,
+                'bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-900/50 dark:text-purple-300 dark:hover:bg-purple-900/70': category === '网站自荐' && activeCategory !== category,
+                'bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/70': category === '文章自荐' && activeCategory !== category,
+                'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600': activeCategory !== category && 
                   category !== '开源自荐' && 
                   category !== '工具自荐' && 
                   category !== '网站自荐' &&

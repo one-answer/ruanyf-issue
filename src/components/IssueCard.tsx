@@ -60,18 +60,18 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
 
   return (
     <div className={classNames(
-      "bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
+      "bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
       {
-        "border-blue-300 bg-blue-50": issue.is_open_source_recommendation,
-        "border-green-300 bg-green-50": issue.is_tool_recommendation && !issue.is_open_source_recommendation,
-        "border-purple-300 bg-purple-50": issue.is_website_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation,
-        "border-amber-300 bg-amber-50": issue.is_article_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation,
-        "border-gray-200": !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation && !issue.is_article_recommendation
+        "border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/20": issue.is_open_source_recommendation,
+        "border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/20": issue.is_tool_recommendation && !issue.is_open_source_recommendation,
+        "border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-900/20": issue.is_website_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation,
+        "border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20": issue.is_article_recommendation && !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation,
+        "border-gray-200 dark:border-gray-700": !issue.is_open_source_recommendation && !issue.is_tool_recommendation && !issue.is_website_recommendation && !issue.is_article_recommendation
       }
     )}>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
               #{issue.number} {issue.title}
             </a>
@@ -88,12 +88,12 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
             href={issue.user.html_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
+            className="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
           >
             {issue.user.login}
           </a>
-          <span className="mx-2 text-gray-400">•</span>
-          <span className="text-sm text-gray-500">
+          <span className="mx-2 text-gray-400 dark:text-gray-500">•</span>
+          <span className="text-sm text-gray-500 dark:text-gray-400">
             {formatDate(issue.created_at)}
           </span>
         </div>
@@ -101,28 +101,28 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
         <div className="flex flex-wrap gap-1 mb-3">
           {issue.is_open_source_recommendation && (
             <span
-              className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+              className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
             >
               开源自荐
             </span>
           )}
           {issue.is_tool_recommendation && (
             <span
-              className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"
+              className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800"
             >
               {getToolBadgeText()}
             </span>
           )}
           {issue.is_website_recommendation && (
             <span
-              className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 border border-purple-200"
+              className="px-2 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/50 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800"
             >
               网站自荐
             </span>
           )}
           {issue.is_article_recommendation && (
             <span
-              className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 border border-amber-200"
+              className="px-2 py-1 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800"
             >
               {getArticleBadgeText()}
             </span>
@@ -144,11 +144,11 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
           }
         </div>
         
-        <p className="text-gray-600 text-sm mb-3 line-clamp-3">
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-3">
           {getBodyPreview(issue.body)}
         </p>
         
-        <div className="flex justify-between items-center text-sm text-gray-500">
+        <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
