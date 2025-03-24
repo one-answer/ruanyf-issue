@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Issue, CategoryMap } from './types'
+import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
 import CategoryTabs from './components/CategoryTabs'
+import SortSelector from './components/SortSelector'
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeCategory, setActiveCategory] = useState('全部')
+  const [sortOption, setSortOption] = useState<SortOption>('newest')
   const [categories, setCategories] = useState<CategoryMap>({})
+
+  // Function to detect if an issue is an open source recommendation
+  const isOpenSourceRecommendation = (title: string): boolean => {
+    // Only match titles that contain exactly "开源自荐"
+    return title.includes('开源自荐');
+  };
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -26,29 +34,37 @@ function App() {
           }
         )
 
-        const fetchedIssues = response.data.map((issue: any) => ({
-          id: issue.id,
-          number: issue.number,
-          title: issue.title,
-          body: issue.body,
-          labels: issue.labels.map((label: any) => ({
-            id: label.id,
-            name: label.name,
-            color: label.color,
-          })),
-          created_at: issue.created_at,
-          updated_at: issue.updated_at,
-          html_url: issue.html_url,
-          user: {
-            login: issue.user.login,
-            avatar_url: issue.user.avatar_url,
-            html_url: issue.user.html_url,
-          },
-          comments: issue.comments,
-        }))
+        const fetchedIssues = response.data.map((issue: any) => {
+          const isRecommendation = isOpenSourceRecommendation(issue.title);
+          
+          return {
+            id: issue.id,
+            number: issue.number,
+            title: issue.title,
+            body: issue.body || '',
+            labels: issue.labels.map((label: any) => ({
+              id: label.id,
+              name: label.name,
+              color: label.color,
+            })),
+            created_at: issue.created_at,
+            updated_at: issue.updated_at,
+            html_url: issue.html_url,
+            user: {
+              login: issue.user.login,
+              avatar_url: issue.user.avatar_url,
+              html_url: issue.user.html_url,
+            },
+            comments: issue.comments,
+            is_open_source_recommendation: isRecommendation,
+          };
+        });
 
         // Process categories from labels
-        const categoryMap: CategoryMap = { '全部': fetchedIssues.length }
+        const categoryMap: CategoryMap = { 
+          '全部': fetchedIssues.length,
+          '开源自荐': fetchedIssues.filter(issue => issue.is_open_source_recommendation).length
+        }
         
         fetchedIssues.forEach((issue: Issue) => {
           issue.labels.forEach(label => {
@@ -73,11 +89,30 @@ function App() {
   }, [])
 
   // Filter issues by selected category
-  const filteredIssues = activeCategory === '全部'
-    ? issues
-    : issues.filter(issue => 
-        issue.labels.some(label => label.name === activeCategory)
-      )
+  const categoryFilteredIssues = 
+    activeCategory === '全部'
+      ? issues
+      : activeCategory === '开源自荐'
+        ? issues.filter(issue => issue.is_open_source_recommendation)
+        : issues.filter(issue => 
+            issue.labels.some(label => label.name === activeCategory)
+          )
+  
+  // Sort the filtered issues
+  const sortedIssues = [...categoryFilteredIssues].sort((a, b) => {
+    switch (sortOption) {
+      case 'newest':
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      case 'oldest':
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      case 'most-commented':
+        return b.comments - a.comments;
+      case 'recently-updated':
+        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      default:
+        return 0;
+    }
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -102,12 +137,18 @@ function App() {
         </div>
       ) : (
         <>
-          <CategoryTabs 
-            categories={categories} 
-            activeCategory={activeCategory} 
-            setActiveCategory={setActiveCategory} 
-          />
-          <IssueList issues={filteredIssues} />
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+            <CategoryTabs 
+              categories={categories} 
+              activeCategory={activeCategory} 
+              setActiveCategory={setActiveCategory} 
+            />
+            <SortSelector
+              sortOption={sortOption}
+              setSortOption={setSortOption}
+            />
+          </div>
+          <IssueList issues={sortedIssues} />
         </>
       )}
     </div>

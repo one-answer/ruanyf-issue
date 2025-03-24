@@ -1,5 +1,6 @@
 import React from 'react';
 import { Issue } from '../types';
+import classNames from 'classnames';
 
 interface IssueCardProps {
   issue: Issue;
@@ -38,7 +39,13 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border border-gray-200">
+    <div className={classNames(
+      "bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
+      {
+        "border-blue-300 bg-blue-50": issue.is_open_source_recommendation,
+        "border-gray-200": !issue.is_open_source_recommendation
+      }
+    )}>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-800 hover:text-blue-600 transition-colors">
@@ -68,9 +75,16 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
           </span>
         </div>
         
-        {issue.labels.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
-            {issue.labels.map(label => (
+        <div className="flex flex-wrap gap-1 mb-3">
+          {issue.is_open_source_recommendation && (
+            <span
+              className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200"
+            >
+              开源自荐
+            </span>
+          )}
+          {issue.labels.length > 0 && 
+            issue.labels.map(label => (
               <span
                 key={label.id}
                 className="px-2 py-1 rounded-full text-xs font-medium"
@@ -82,9 +96,9 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
               >
                 {label.name}
               </span>
-            ))}
-          </div>
-        )}
+            ))
+          }
+        </div>
         
         <p className="text-gray-600 text-sm mb-3 line-clamp-3">
           {getBodyPreview(issue.body)}

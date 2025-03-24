@@ -21,8 +21,11 @@ export interface Issue {
   html_url: string;
   user: User;
   comments: number;
+  is_open_source_recommendation: boolean;
 }
 
 export interface CategoryMap {
   [key: string]: number;
-} 
+}
+
+export type SortOption = 'newest' | 'oldest' | 'most-commented' | 'recently-updated'; 

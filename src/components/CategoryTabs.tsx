@@ -19,11 +19,14 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
       // Keep '全部' at the beginning
       if (a[0] === '全部') return -1;
       if (b[0] === '全部') return 1;
+      // Keep '开源自荐' right after '全部'
+      if (a[0] === '开源自荐') return -1;
+      if (b[0] === '开源自荐') return 1;
       return b[1] - a[1];
     });
 
   return (
-    <div className="mb-6">
+    <div className="w-full md:w-auto">
       <h2 className="text-lg font-semibold mb-2 text-gray-700">分类筛选</h2>
       <div className="flex flex-wrap gap-2">
         {sortedCategories.map(([category, count]) => (
@@ -34,7 +37,8 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               'px-3 py-1 rounded-full text-sm font-medium transition-colors',
               {
                 'bg-blue-600 text-white': activeCategory === category,
-                'bg-gray-200 text-gray-800 hover:bg-gray-300': activeCategory !== category,
+                'bg-blue-100 text-blue-800 hover:bg-blue-200': category === '开源自荐' && activeCategory !== category,
+                'bg-gray-200 text-gray-800 hover:bg-gray-300': activeCategory !== category && category !== '开源自荐',
               }
             )}
           >

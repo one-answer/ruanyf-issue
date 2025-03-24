@@ -16,10 +16,15 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {issues.map(issue => (
-        <IssueCard key={issue.id} issue={issue} />
-      ))}
+    <div>
+      <div className="mb-4 text-sm text-gray-600">
+        共找到 <span className="font-semibold">{issues.length}</span> 个符合条件的 Issue
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {issues.map(issue => (
+          <IssueCard key={issue.id} issue={issue} />
+        ))}
+      </div>
     </div>
   );
 };
