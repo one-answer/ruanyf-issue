@@ -4,11 +4,12 @@ import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
 import CategoryTabs from './components/CategoryTabs'
 import SortSelector from './components/SortSelector'
+import './App.css'
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [error, setError] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState('全部')
   const [sortOption, setSortOption] = useState<SortOption>('newest')
   const [categories, setCategories] = useState<CategoryMap>({})
@@ -21,8 +22,8 @@ function App() {
 
   // Function to detect if an issue is a tool recommendation
   const isToolRecommendation = (title: string): boolean => {
-    // Only match titles that contain exactly "工具自荐"
-    return title.includes('工具自荐');
+    // Match titles that contain either "工具自荐" or "工具推荐"
+    return title.includes('工具自荐') || title.includes('工具推荐');
   };
 
   // Function to detect if an issue is a website recommendation
@@ -31,10 +32,25 @@ function App() {
     return title.includes('网站自荐');
   };
 
+  // Define sorting functions
+  const sortByLatest = (a: Issue, b: Issue): number => {
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  };
+
+  const sortByOldest = (a: Issue, b: Issue): number => {
+    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+  };
+
+  const sortByMostComments = (a: Issue, b: Issue): number => {
+    return b.comments - a.comments;
+  };
+
   useEffect(() => {
     const fetchIssues = async () => {
       try {
         setLoading(true)
+        setError(null)
+        
         // GitHub API for issues in ruanyf/weekly repository
         const response = await axios.get(
           'https://api.github.com/repos/ruanyf/weekly/issues',
@@ -95,10 +111,10 @@ function App() {
 
         setIssues(fetchedIssues)
         setCategories(categoryMap)
-        setLoading(false)
       } catch (err) {
         console.error('Error fetching issues:', err)
         setError('无法获取 Issues 数据，请稍后再试')
+      } finally {
         setLoading(false)
       }
     }
@@ -122,57 +138,60 @@ function App() {
   
   // Sort the filtered issues
   const sortedIssues = [...categoryFilteredIssues].sort((a, b) => {
-    switch (sortOption) {
-      case 'newest':
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      case 'oldest':
-        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-      case 'most-commented':
-        return b.comments - a.comments;
-      case 'recently-updated':
-        return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-      default:
-        return 0;
-    }
+    if (sortOption === 'newest') return sortByLatest(a, b);
+    if (sortOption === 'oldest') return sortByOldest(a, b);
+    if (sortOption === 'most-commented') return sortByMostComments(a, b);
+    if (sortOption === 'recently-updated') return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+    return 0;
   });
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          阮一峰的周刊 Issues
-        </h1>
-        <p className="text-gray-600">
-          展示 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">ruanyf/weekly</a> 仓库的 issues 并按类别分类
-        </p>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-2xl font-bold text-gray-800">科技爱好者周刊 - 列表</h1>
+          <p className="text-gray-500">查看 Ruanyf 的周刊 GitHub 仓库中的开源推荐</p>
+        </div>
       </header>
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
+      
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 sm:px-0">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <CategoryTabs 
               categories={categories} 
               activeCategory={activeCategory} 
               setActiveCategory={setActiveCategory} 
             />
-            <SortSelector
-              sortOption={sortOption}
-              setSortOption={setSortOption}
-            />
+            
+            <div className="mt-4 sm:mt-0">
+              <SortSelector
+                sortOption={sortOption}
+                setSortOption={setSortOption}
+              />
+            </div>
           </div>
-          <IssueList issues={sortedIssues} />
-        </>
-      )}
+          
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="loader"></div>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 border border-red-200 text-red-800 rounded-md p-4">
+              {error}
+            </div>
+          ) : (
+            <IssueList issues={sortedIssues} />
+          )}
+        </div>
+      </main>
+      
+      <footer className="bg-white shadow-inner mt-8">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-gray-500 text-sm">
+            数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">ruanyf/weekly</a> 仓库
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

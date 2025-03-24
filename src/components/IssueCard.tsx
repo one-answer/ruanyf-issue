@@ -38,6 +38,16 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       : plainText;
   };
 
+  // Determine the appropriate tool badge text
+  const getToolBadgeText = () => {
+    if (issue.title.includes('工具自荐')) {
+      return '工具自荐';
+    } else if (issue.title.includes('工具推荐')) {
+      return '工具推荐';
+    }
+    return '工具自荐'; // Default fallback
+  };
+
   return (
     <div className={classNames(
       "bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden border",
@@ -89,7 +99,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
             <span
               className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"
             >
-              工具自荐
+              {getToolBadgeText()}
             </span>
           )}
           {issue.is_website_recommendation && (
