@@ -233,7 +233,7 @@ function App() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">科技爱好者周刊 - 列表</h1>
-              <p className="text-gray-500 dark:text-gray-400">查看 Ruanyf 的周刊 GitHub 仓库中的推荐</p>
+              <p className="text-gray-500 dark:text-gray-400">查看 Ruanyf 的周刊 GitHub 仓库中的 Issues</p>
             </div>
             <ThemeToggle />
           </div>
