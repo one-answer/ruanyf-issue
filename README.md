@@ -1,1 +1,47 @@
-# ruanyf-issue
+# 阮一峰周刊 Issue 查看器
+
+这是一个用于展示 [阮一峰的周刊](https://github.com/ruanyf/weekly) 仓库中 Issues 的网页应用。该应用可以按照类别（标签）对 Issues 进行分类并展示。
+
+## 功能特点
+
+- 从 GitHub API 获取 [ruanyf/weekly](https://github.com/ruanyf/weekly/issues) 仓库的 issues 数据
+- 根据 issue 的标签自动分类
+- 支持按类别筛选查看 issues
+- 显示 issue 的基本信息：标题、作者、创建时间、更新时间、评论数等
+- 响应式设计，适配各种设备
+
+## 技术栈
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- Axios（用于 API 请求）
+
+## 开发
+
+1. 克隆项目
+   ```
+   git clone https://github.com/yourusername/ruanyf-issue-viewer.git
+   cd ruanyf-issue-viewer
+   ```
+
+2. 安装依赖
+   ```
+   npm install
+   ```
+
+3. 启动开发服务器
+   ```
+   npm run dev
+   ```
+
+4. 打开浏览器访问 http://localhost:5173
+
+## 构建部署
+
+```
+npm run build
+```
+
+构建完成后会在 `dist` 目录生成静态文件，可以部署到任何静态网站托管服务。
