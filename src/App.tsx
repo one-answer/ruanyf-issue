@@ -25,6 +25,12 @@ function App() {
     return title.includes('工具自荐');
   };
 
+  // Function to detect if an issue is a website recommendation
+  const isWebsiteRecommendation = (title: string): boolean => {
+    // Only match titles that contain exactly "网站自荐"
+    return title.includes('网站自荐');
+  };
+
   useEffect(() => {
     const fetchIssues = async () => {
       try {
@@ -43,6 +49,7 @@ function App() {
         const fetchedIssues = response.data.map((issue: any) => {
           const isOpenSource = isOpenSourceRecommendation(issue.title);
           const isTool = isToolRecommendation(issue.title);
+          const isWebsite = isWebsiteRecommendation(issue.title);
           
           return {
             id: issue.id,
@@ -65,6 +72,7 @@ function App() {
             comments: issue.comments,
             is_open_source_recommendation: isOpenSource,
             is_tool_recommendation: isTool,
+            is_website_recommendation: isWebsite,
           };
         });
 
@@ -72,7 +80,8 @@ function App() {
         const categoryMap: CategoryMap = { 
           '全部': fetchedIssues.length,
           '开源自荐': fetchedIssues.filter(issue => issue.is_open_source_recommendation).length,
-          '工具自荐': fetchedIssues.filter(issue => issue.is_tool_recommendation).length
+          '工具自荐': fetchedIssues.filter(issue => issue.is_tool_recommendation).length,
+          '网站自荐': fetchedIssues.filter(issue => issue.is_website_recommendation).length
         }
         
         fetchedIssues.forEach((issue: Issue) => {
@@ -105,9 +114,11 @@ function App() {
         ? issues.filter(issue => issue.is_open_source_recommendation)
         : activeCategory === '工具自荐'
           ? issues.filter(issue => issue.is_tool_recommendation)
-          : issues.filter(issue => 
-              issue.labels.some(label => label.name === activeCategory)
-            )
+          : activeCategory === '网站自荐'
+            ? issues.filter(issue => issue.is_website_recommendation)
+            : issues.filter(issue => 
+                issue.labels.some(label => label.name === activeCategory)
+              )
   
   // Sort the filtered issues
   const sortedIssues = [...categoryFilteredIssues].sort((a, b) => {

@@ -23,6 +23,7 @@ export interface Issue {
   comments: number;
   is_open_source_recommendation: boolean;
   is_tool_recommendation: boolean;
+  is_website_recommendation: boolean;
 }
 
 export interface CategoryMap {
