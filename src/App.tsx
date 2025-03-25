@@ -8,6 +8,9 @@ import ThemeToggle from './components/ThemeToggle'
 import SearchBar from './components/SearchBar'
 import './App.css'
 
+// GitHub API token - in production, this should be in an environment variable
+const GITHUB_TOKEN = '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';
+
 function App() {
   const [issues, setIssues] = useState<Issue[]>([])
   const [loading, setLoading] = useState(true)
@@ -76,6 +79,10 @@ function App() {
             per_page: 100,
             page: pageNum,
           },
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': `token ${GITHUB_TOKEN}`
+          }
         }
       );
 
@@ -132,6 +139,9 @@ function App() {
       
       updatedIssues.forEach((issue: Issue) => {
         issue.labels.forEach((label: {name: string}) => {
+          // Skip issue- labels
+          if (label.name.startsWith('issue-')) return;
+          
           if (!categoryMap[label.name]) {
             categoryMap[label.name] = 0;
           }
