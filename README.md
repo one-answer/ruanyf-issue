@@ -31,12 +31,26 @@
    npm install
    ```
 
-3. 启动开发服务器
+3. 配置环境变量（可选）
+   创建一个 `.env.local` 文件并添加 GitHub token 以增加 API 请求限制：
+   ```
+   VITE_GITHUB_TOKEN=your_github_personal_access_token
+   ```
+   
+   不设置 token 的情况下，GitHub API 限制为每小时 60 次请求，使用 token 后可提高到每小时 5,000 次请求。
+   
+   获取 token 的方法：
+   - 访问 https://github.com/settings/tokens
+   - 点击 "Generate new token (classic)"
+   - 只需勾选 "public_repo" 权限
+   - 创建并复制 token 到 `.env.local` 文件中
+
+4. 启动开发服务器
    ```
    npm run dev
    ```
 
-4. 打开浏览器访问 http://localhost:5173
+5. 打开浏览器访问 http://localhost:5173
 
 ## 构建部署
 

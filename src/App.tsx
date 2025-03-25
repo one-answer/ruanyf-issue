@@ -8,8 +8,8 @@ import ThemeToggle from './components/ThemeToggle'
 import SearchBar from './components/SearchBar'
 import './App.css'
 
-// GitHub API token - in production, this should be in an environment variable
-const GITHUB_TOKEN = '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';
+// Get GitHub API token from environment variables
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
 
 function App() {
   const [issues, setIssues] = useState<Issue[]>([])
@@ -70,6 +70,16 @@ function App() {
       }
       setError(null);
       
+      // Prepare headers for GitHub API request
+      const headers: Record<string, string> = {
+        'Accept': 'application/vnd.github.v3+json'
+      };
+      
+      // Add authorization token if available
+      if (GITHUB_TOKEN) {
+        headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      }
+      
       // GitHub API for issues in ruanyf/weekly repository
       const response = await axios.get(
         'https://api.github.com/repos/ruanyf/weekly/issues',
@@ -79,12 +89,14 @@ function App() {
             per_page: 100,
             page: pageNum,
           },
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'Authorization': `token ${GITHUB_TOKEN}`
-          }
+          headers
         }
       );
+      
+      // Log remaining rate limit
+      if (response.headers['x-ratelimit-remaining']) {
+        console.log(`GitHub API requests remaining: ${response.headers['x-ratelimit-remaining']}`);
+      }
 
       const fetchedIssues = response.data.map((issue: any) => {
         const isOpenSource = isOpenSourceRecommendation(issue.title);
@@ -153,7 +165,22 @@ function App() {
       setCategories(categoryMap);
     } catch (err) {
       console.error('Error fetching issues:', err);
-      setError('无法获取 Issues 数据，请稍后再试');
+      
+      // Check if error is due to rate limiting
+      if (axios.isAxiosError(err) && err.response) {
+        if (err.response.status === 403 && err.response.headers['x-ratelimit-remaining'] === '0') {
+          const resetTime = new Date(parseInt(err.response.headers['x-ratelimit-reset'] || '0', 10) * 1000);
+          const resetTimeString = resetTime.toLocaleString();
+          setError(`GitHub API 请求次数已达上限，请等待至 ${resetTimeString} 后再试，或者添加有效的 GitHub Token`);
+        } else if (err.response.status === 401) {
+          setError('GitHub Token 无效，请提供有效的 Token');
+        } else {
+          setError(`无法获取 Issues 数据，错误码: ${err.response.status}，请稍后再试`);
+        }
+      } else {
+        setError('无法获取 Issues 数据，请稍后再试');
+      }
+      
       setHasMore(false);
     } finally {
       setLoading(false);
