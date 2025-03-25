@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
 import CategoryTabs from './components/CategoryTabs'
 import SortSelector from './components/SortSelector'
 import ThemeToggle from './components/ThemeToggle'
+import SearchBar from './components/SearchBar'
 import './App.css'
 
 function App() {
@@ -17,8 +18,7 @@ function App() {
   const [categories, setCategories] = useState<CategoryMap>({})
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
-  const observer = useRef<IntersectionObserver | null>(null)
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Function to detect if an issue is an open source recommendation
   const isOpenSourceRecommendation = (title: string): boolean => {
@@ -151,6 +151,15 @@ function App() {
     }
   }, [issues]);
 
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // Reset pagination when searching
+    if (page !== 1) {
+      setPage(1);
+    }
+  };
+
   // Load initial issues
   useEffect(() => {
     // Reset when changing categories or sort options
@@ -159,38 +168,6 @@ function App() {
     setHasMore(true);
     fetchIssues(1, false);
   }, [activeCategory, sortOption]);
-
-  // Setup intersection observer for infinite scrolling
-  useEffect(() => {
-    if (loading || loadingMore) return;
-
-    // Disconnect any existing observer
-    if (observer.current) {
-      observer.current.disconnect();
-    }
-
-    // Create a new observer
-    const callback = (entries: IntersectionObserverEntry[]) => {
-      if (entries[0].isIntersecting && hasMore && !loadingMore) {
-        loadNextPage();
-      }
-    };
-
-    observer.current = new IntersectionObserver(callback, {
-      rootMargin: '100px',
-    });
-
-    // Observe the load more element
-    if (loadMoreRef.current) {
-      observer.current.observe(loadMoreRef.current);
-    }
-
-    return () => {
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-    };
-  }, [loading, loadingMore, hasMore, loadMoreRef.current]);
 
   // Function to load next page
   const loadNextPage = () => {
@@ -217,8 +194,19 @@ function App() {
                   issue.labels.some((label: {name: string}) => label.name === activeCategory)
                 );
   
+  // Filter issues by search query
+  const searchFilteredIssues = searchQuery
+    ? categoryFilteredIssues.filter((issue: Issue) => {
+        const lowerCaseQuery = searchQuery.toLowerCase();
+        return (
+          issue.title.toLowerCase().includes(lowerCaseQuery) ||
+          issue.body.toLowerCase().includes(lowerCaseQuery)
+        );
+      })
+    : categoryFilteredIssues;
+  
   // Sort the filtered issues
-  const sortedIssues = [...categoryFilteredIssues].sort((a, b) => {
+  const sortedIssues = [...searchFilteredIssues].sort((a, b) => {
     if (sortOption === 'newest') return sortByLatest(a, b);
     if (sortOption === 'oldest') return sortByOldest(a, b);
     if (sortOption === 'most-commented') return sortByMostComments(a, b);
@@ -242,6 +230,10 @@ function App() {
       
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 sm:px-0">
+          <div className="mb-6">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+          
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <CategoryTabs 
               categories={categories} 
@@ -270,7 +262,7 @@ function App() {
               <IssueList issues={sortedIssues} />
               
               {/* Load more section */}
-              <div className="mt-8 text-center" ref={loadMoreRef}>
+              <div className="mt-8 text-center">
                 {loadingMore && (
                   <div className="py-4">
                     <div className="loader mx-auto dark:border-gray-700 dark:border-t-blue-500"></div>
@@ -278,20 +270,26 @@ function App() {
                   </div>
                 )}
                 
-                {!loadingMore && hasMore && categoryFilteredIssues.length > 0 && (
+                {!loadingMore && hasMore && categoryFilteredIssues.length > 0 && !searchQuery && (
                   <button
                     onClick={loadNextPage}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-lg font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
                   >
-                    加载更多
+                    查看更多
                   </button>
                 )}
                 
                 {!hasMore && issues.length > 0 && (
                   <p className="py-4 text-gray-600 dark:text-gray-400">
-                    {categoryFilteredIssues.length === 0 
-                      ? '没有符合条件的 issue'
+                    {searchFilteredIssues.length === 0 
+                      ? '没有符合搜索条件的 issue'
                       : '已加载全部内容'}
+                  </p>
+                )}
+                
+                {searchQuery && searchFilteredIssues.length === 0 && (
+                  <p className="py-4 text-gray-600 dark:text-gray-400">
+                    没有符合搜索条件的 issue
                   </p>
                 )}
               </div>
