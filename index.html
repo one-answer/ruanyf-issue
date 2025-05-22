@@ -4,19 +4,64 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/github-mark.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>那些投递过阮一峰的作品</title>
-    <meta name="description" content="查看和搜索阮一峰周刊的所有 Issue。">
-    <meta name="keywords" content="阮一峰, 周刊, Issue, 查看, 搜索">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3b82f6" />
+
+    <!-- Primary Meta Tags -->
+    <title>那些投递过阮一峰的作品 - 科技爱好者周刊 Issue 列表</title>
+    <meta name="description" content="浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue，包括开源项目、工具、网站和文章推荐。">
+    <meta name="keywords" content="阮一峰, 科技爱好者周刊, Issue, 开源自荐, 工具推荐, 网站自荐, 文章推荐, GitHub">
     <meta name="author" content="奥利弗">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3811349067654166"
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://ruanyf.aolifu.org/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ruanyf.aolifu.org/">
+    <meta property="og:title" content="那些投递过阮一峰的作品 - 科技爱好者周刊 Issue 列表">
+    <meta property="og:description" content="浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue，包括开源项目、工具、网站和文章推荐。">
+    <meta property="og:image" content="https://ruanyf.aolifu.org/github-mark.svg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ruanyf.aolifu.org/">
+    <meta property="twitter:title" content="那些投递过阮一峰的作品 - 科技爱好者周刊 Issue 列表">
+    <meta property="twitter:description" content="浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue，包括开源项目、工具、网站和文章推荐。">
+    <meta property="twitter:image" content="https://ruanyf.aolifu.org/github-mark.svg">
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/github-mark.svg">
+
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "那些投递过阮一峰的作品",
+        "description": "浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue，包括开源项目、工具、网站和文章推荐。",
+        "url": "https://ruanyf.aolifu.org/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://ruanyf.aolifu.org/?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3811349067654166"
             crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-GM6H5H4EK5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-GM6H5H4EK5');
     </script>
   </head>
@@ -24,4 +69,4 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
-</html> 
+</html>

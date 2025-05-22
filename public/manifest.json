@@ -1,0 +1,21 @@
+{
+  "name": "那些投递过阮一峰的作品",
+  "short_name": "阮一峰周刊",
+  "description": "浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue，包括开源项目、工具、网站和文章推荐。",
+  "start_url": "https://ruanyf.aolifu.org/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/github-mark.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/github-mark.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { Issue, CategoryMap, SortOption } from './types'
 import IssueList from './components/IssueList'
@@ -69,17 +69,17 @@ function App() {
         setLoading(true);
       }
       setError(null);
-      
+
       // Prepare headers for GitHub API request
       const headers: Record<string, string> = {
         'Accept': 'application/vnd.github.v3+json'
       };
-      
+
       // Add authorization token if available
       if (GITHUB_TOKEN) {
         headers['Authorization'] = `token ${GITHUB_TOKEN}`;
       }
-      
+
       // GitHub API for issues in ruanyf/weekly repository
       const response = await axios.get(
         'https://api.github.com/repos/ruanyf/weekly/issues',
@@ -92,7 +92,7 @@ function App() {
           headers
         }
       );
-      
+
       // Log remaining rate limit
       if (response.headers['x-ratelimit-remaining']) {
         console.log(`GitHub API requests remaining: ${response.headers['x-ratelimit-remaining']}`);
@@ -103,7 +103,7 @@ function App() {
         const isTool = isToolRecommendation(issue.title);
         const isWebsite = isWebsiteRecommendation(issue.title);
         const isArticle = isArticleRecommendation(issue.title);
-        
+
         return {
           id: issue.id,
           number: issue.number,
@@ -136,24 +136,24 @@ function App() {
       }
 
       // If loading more, append to existing issues, otherwise replace
-      const updatedIssues = isLoadingMore 
-        ? [...issues, ...fetchedIssues] 
+      const updatedIssues = isLoadingMore
+        ? [...issues, ...fetchedIssues]
         : fetchedIssues;
 
       // Process categories from all issues
-      const categoryMap: CategoryMap = { 
+      const categoryMap: CategoryMap = {
         '全部': updatedIssues.length,
         '开源自荐': updatedIssues.filter((issue: Issue) => issue.is_open_source_recommendation).length,
         '工具自荐': updatedIssues.filter((issue: Issue) => issue.is_tool_recommendation).length,
         '网站自荐': updatedIssues.filter((issue: Issue) => issue.is_website_recommendation).length,
         '文章自荐': updatedIssues.filter((issue: Issue) => issue.is_article_recommendation).length
       };
-      
+
       updatedIssues.forEach((issue: Issue) => {
         issue.labels.forEach((label: {name: string}) => {
           // Skip issue- labels
           if (label.name.startsWith('issue-')) return;
-          
+
           if (!categoryMap[label.name]) {
             categoryMap[label.name] = 0;
           }
@@ -165,7 +165,7 @@ function App() {
       setCategories(categoryMap);
     } catch (err) {
       console.error('Error fetching issues:', err);
-      
+
       // Check if error is due to rate limiting
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 403 && err.response.headers['x-ratelimit-remaining'] === '0') {
@@ -180,7 +180,7 @@ function App() {
       } else {
         setError('无法获取 Issues 数据，请稍后再试');
       }
-      
+
       setHasMore(false);
     } finally {
       setLoading(false);
@@ -216,7 +216,7 @@ function App() {
   };
 
   // Filter issues by selected category
-  const categoryFilteredIssues = 
+  const categoryFilteredIssues =
     activeCategory === '全部'
       ? issues
       : activeCategory === '开源自荐'
@@ -227,10 +227,10 @@ function App() {
             ? issues.filter((issue: Issue) => issue.is_website_recommendation)
             : activeCategory === '文章自荐'
               ? issues.filter((issue: Issue) => issue.is_article_recommendation)
-              : issues.filter((issue: Issue) => 
+              : issues.filter((issue: Issue) =>
                   issue.labels.some((label: {name: string}) => label.name === activeCategory)
                 );
-  
+
   // Filter issues by search query
   const searchFilteredIssues = searchQuery
     ? categoryFilteredIssues.filter((issue: Issue) => {
@@ -241,7 +241,7 @@ function App() {
         );
       })
     : categoryFilteredIssues;
-  
+
   // Sort the filtered issues
   const sortedIssues = [...searchFilteredIssues].sort((a, b) => {
     if (sortOption === 'newest') return sortByLatest(a, b);
@@ -251,6 +251,36 @@ function App() {
     return 0;
   });
 
+  // Update document title and meta description based on active category
+  React.useEffect(() => {
+    // Set document title based on active category
+    let title = '那些投递过阮一峰的作品';
+    if (activeCategory !== '全部') {
+      title = `${activeCategory} - ${title}`;
+    }
+    document.title = title;
+
+    // Set meta description based on active category
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      let description = '浏览、搜索和筛选阮一峰科技爱好者周刊的所有 Issue';
+      if (activeCategory !== '全部') {
+        description = `浏览阮一峰科技爱好者周刊中的${activeCategory}类 Issue - ${description}`;
+      }
+      metaDescription.setAttribute('content', description);
+    }
+
+    // Update canonical URL based on active category
+    const canonicalLink = document.querySelector('link[rel="canonical"]');
+    if (canonicalLink) {
+      let url = 'https://ruanyf.aolifu.org/';
+      if (activeCategory !== '全部') {
+        url = `https://ruanyf.aolifu.org/?category=${encodeURIComponent(activeCategory)}`;
+      }
+      canonicalLink.setAttribute('href', url);
+    }
+  }, [activeCategory]);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       <header className="bg-white dark:bg-gray-800 shadow-sm">
@@ -258,26 +288,26 @@ function App() {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold text-gray-800 dark:text-white">科技爱好者周刊 - 列表</h1>
-              <p className="text-gray-500 dark:text-gray-400">查看 Ruanyf 的周刊 GitHub 仓库中的 Issues</p>
+              <h2 className="text-gray-500 dark:text-gray-400 text-base font-normal">查看 Ruanyf 的周刊 GitHub 仓库中的 Issues</h2>
             </div>
             <ThemeToggle />
           </div>
         </div>
       </header>
-      
+
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="px-4 sm:px-0">
           <div className="mb-6">
             <SearchBar onSearch={handleSearch} />
           </div>
-          
+
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <CategoryTabs 
-              categories={categories} 
-              activeCategory={activeCategory} 
-              setActiveCategory={setActiveCategory} 
+            <CategoryTabs
+              categories={categories}
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
             />
-            
+
             <div className="mt-4 sm:mt-0">
               <SortSelector
                 sortOption={sortOption}
@@ -285,7 +315,7 @@ function App() {
               />
             </div>
           </div>
-          
+
           {loading && !loadingMore ? (
             <div className="flex justify-center items-center h-64">
               <div className="loader dark:border-gray-700 dark:border-t-blue-500"></div>
@@ -297,7 +327,7 @@ function App() {
           ) : (
             <>
               <IssueList issues={sortedIssues} />
-              
+
               {/* Load more section */}
               <div className="mt-8 text-center">
                 {loadingMore && (
@@ -306,7 +336,7 @@ function App() {
                     <p className="mt-2 text-gray-600 dark:text-gray-400">正在加载更多...</p>
                   </div>
                 )}
-                
+
                 {!loadingMore && hasMore && categoryFilteredIssues.length > 0 && !searchQuery && (
                   <button
                     onClick={loadNextPage}
@@ -315,15 +345,15 @@ function App() {
                     查看更多
                   </button>
                 )}
-                
+
                 {!hasMore && issues.length > 0 && (
                   <p className="py-4 text-gray-600 dark:text-gray-400">
-                    {searchFilteredIssues.length === 0 
+                    {searchFilteredIssues.length === 0
                       ? '没有符合搜索条件的 issue'
                       : '已加载全部内容'}
                   </p>
                 )}
-                
+
                 {searchQuery && searchFilteredIssues.length === 0 && (
                   <p className="py-4 text-gray-600 dark:text-gray-400">
                     没有符合搜索条件的 issue
@@ -334,16 +364,24 @@ function App() {
           )}
         </div>
       </main>
-      
+
       <footer className="bg-white dark:bg-gray-800 shadow-inner mt-8">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">ruanyf/weekly</a> 仓库
-          </p>
+          <h2 className="sr-only">网站信息</h2>
+          <div className="text-center">
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
+              数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">ruanyf/weekly</a> 仓库
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              <a href="https://ruanyf.github.io/weekly/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mx-2">阮一峰周刊</a>
+              <span className="mx-1">|</span>
+              <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mx-2">周刊 Issues</a>
+            </p>
+          </div>
         </div>
       </footer>
     </div>
   )
 }
 
-export default App 
+export default App

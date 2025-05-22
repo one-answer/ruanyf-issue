@@ -20,7 +20,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   // Truncate body to a preview
   const getBodyPreview = (body: string) => {
     if (!body) return '';
-    
+
     // Remove markdown and limit to ~120 characters
     const plainText = body
       .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
@@ -32,8 +32,8 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
       .replace(/```[\s\S]*?```/g, '') // Remove code blocks
       .replace(/\n+/g, ' ') // Replace newlines with spaces
       .trim();
-    
-    return plainText.length > 120 
+
+    return plainText.length > 120
       ? plainText.substring(0, 120) + '...'
       : plainText;
   };
@@ -71,20 +71,20 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
     )}>
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-            <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+            <a href={issue.html_url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               #{issue.number} {issue.title}
             </a>
           </h3>
         </div>
-        
+
         <div className="flex items-center mb-3">
-          <img 
-            src={issue.user.avatar_url} 
+          <img
+            src={issue.user.avatar_url}
             alt={issue.user.login}
             className="w-6 h-6 rounded-full mr-2"
           />
-          <a 
+          <a
             href={issue.user.html_url}
             target="_blank"
             rel="noopener noreferrer"
@@ -97,7 +97,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
             {formatDate(issue.created_at)}
           </span>
         </div>
-        
+
         <div className="flex flex-wrap gap-1 mb-3">
           {issue.is_open_source_recommendation && (
             <span
@@ -127,7 +127,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
               {getArticleBadgeText()}
             </span>
           )}
-          {issue.labels.length > 0 && 
+          {issue.labels.length > 0 &&
             issue.labels.map(label => (
               <span
                 key={label.id}
@@ -143,11 +143,11 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
             ))
           }
         </div>
-        
+
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-3">
           {getBodyPreview(issue.body)}
         </p>
-        
+
         <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -164,4 +164,4 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue }) => {
   );
 };
 
-export default IssueCard; 
+export default IssueCard;

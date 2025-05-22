@@ -17,6 +17,7 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
 
   return (
     <div>
+      <h2 className="sr-only">Issue 列表</h2>
       <div className="mb-4 text-sm text-gray-600 dark:text-gray-400">
         共找到 <span className="font-semibold">{issues.length}</span> 个符合条件的 Issue
       </div>
@@ -29,4 +30,4 @@ const IssueList: React.FC<IssueListProps> = ({ issues }) => {
   );
 };
 
-export default IssueList; 
+export default IssueList;

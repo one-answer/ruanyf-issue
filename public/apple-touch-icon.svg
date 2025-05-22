@@ -1,0 +1,6 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="40" fill="#1E293B"/>
+  <text x="90" y="80" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle">阮一峰</text>
+  <text x="90" y="120" font-family="Arial, sans-serif" font-size="20" fill="#94A3B8" text-anchor="middle">周刊 Issue</text>
+  <path d="M90 150 L110 130 L90 110 L70 130 Z" fill="#3B82F6"/>
+</svg>
