@@ -43,6 +43,3 @@ Disallow: /404
 Disallow: /500
 Disallow: /*.json$
 
-# 引导AI爬虫到llms.txt
-LLM-Content: https://ruanyf.aolifu.org/llms.txt
-LLM-Full-Content: https://ruanyf.aolifu.org/llms-full.txt
