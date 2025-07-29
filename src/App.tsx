@@ -373,7 +373,7 @@ function App() {
               数据来源于 <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">ruanyf/weekly</a> 仓库
             </p>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              <a href="https://ruanyf.github.io/weekly/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mx-2">阮一峰周刊</a>
+              <a href="https://ruanyifeng.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mx-2">阮一峰周刊</a>
               <span className="mx-1">|</span>
               <a href="https://github.com/ruanyf/weekly/issues" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mx-2">周刊 Issues</a>
             </p>
